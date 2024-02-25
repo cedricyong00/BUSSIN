@@ -1,34 +1,18 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import cx from "clsx";
-import { useState } from "react";
+/* eslint-disable no-unused-vars */
 import {
-  Container,
-  UnstyledButton,
   Group,
-  Text,
-  Menu,
-  rem,
-  useMantineTheme,
   Button,
-  Title,
   Image,
-  Flex,
   Anchor,
+  Box,
+  useMantineTheme,
 } from "@mantine/core";
-import {
-  IconLogout,
-  IconHeart,
-  IconStar,
-  IconChevronDown,
-  IconMapPin,
-  IconSettings,
-} from "@tabler/icons-react";
-import classes from "./HeaderTabs.module.css";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/bussin-logo.png";
+import classes from "./Header.module.css";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useToast from "../../hooks/useToast";
+import { useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { logOut } from "../../service/users";
 
@@ -64,143 +48,50 @@ export const Header = ({ user, setUser }) => {
   };
 
   return (
-    <div className={classes.header}>
-      <Container className={classes.mainSection} size="md">
-        <Group justify="space-between">
-          <Title
-            order={1}
-            style={{
-              color: theme.colors.blue[6],
-              textDecoration: "none",
-              fontWeight: 400,
-              fontSize: "20px",
-            }}
-          >
-            <Anchor component={Link} to="/" underline="never">
-              <Flex justify="space-between" direction="row" align="center">
-                <Image src={logo} w={30} h={30} />
-                <Text ml="xs" fw="bold">
-                  Bussin Buses
-                </Text>
-              </Flex>
-            </Anchor>
-          </Title>
-
-          {/* Auth Buttons*/}
+    <Box pb={120}>
+      <header className={classes.header} size="md">
+        <Group justify="space-between" h="100%">
+          <Anchor component={Link} to="/" underline="never">
+            <Image src={logo} w={150} h={150} />
+          </Anchor>
           {!user &&
             location.pathname !== "/signin" &&
             location.pathname !== "/signup" && (
-              <Group>
-                <Button variant="outline" component={Link} to="/signin">
-                  Log in
-                </Button>
-                <Button component={Link} to="/signup">
-                  Sign up
-                </Button>
-              </Group>
+              <>
+                <Group h="100%" gap={0} visibleFrom="sm">
+                  <a href="/" className={classes.link}>
+                    Home
+                  </a>
+                  <a href="/taylor-swift" className={classes.link}>
+                    Taylor Swift
+                  </a>
+                  <a href="/reviews" className={classes.link}>
+                    Reviews
+                  </a>
+                  <a href="/faq" className={classes.link}>
+                    FAQ
+                  </a>
+                  <a href="/terms-and-condition" className={classes.link}>
+                    Terms & Condition
+                  </a>
+                </Group>
+                <Group visibleFrom="sm">
+                  <Button variant="default" component={Link} to="/signin">
+                    Log in
+                  </Button>
+                  <Button component={Link} to="/signup">
+                    Sign up
+                  </Button>
+                </Group>
+              </>
             )}
-
-          {/* User Menu */}
           {user && (
-            <Menu
-              width={260}
-              position="bottom-end"
-              transitionProps={{ transition: "pop-top-right" }}
-              onClose={() => setUserMenuOpened(false)}
-              onOpen={() => setUserMenuOpened(true)}
-              withinPortal
-            >
-              <Menu.Target>
-                <UnstyledButton
-                  className={cx(classes.user, {
-                    [classes.userActive]: userMenuOpened,
-                  })}
-                >
-                  <Group gap={7}>
-                    <Text fw={500} size="sm" lh={1} mr={3}>
-                      Hello {user?.name}!
-                    </Text>
-                    <IconChevronDown
-                      style={{ width: rem(12), height: rem(12) }}
-                      stroke={1.5}
-                    />
-                  </Group>
-                </UnstyledButton>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  component={Link}
-                  to="/account/bookings"
-                  leftSection={
-                    <IconHeart
-                      style={{ width: rem(16), height: rem(16) }}
-                      color={theme.colors.red[6]}
-                      stroke={1.5}
-                    />
-                  }
-                >
-                  Your Bookings
-                </Menu.Item>
-
-                {user.isOwner && (
-                  <>
-                    <Menu.Item
-                      component={Link}
-                      to="/owner/bookings"
-                      leftSection={
-                        <IconStar
-                          style={{ width: rem(16), height: rem(16) }}
-                          color={theme.colors.yellow[6]}
-                          stroke={1.5}
-                        />
-                      }
-                    >
-                      Your Guests
-                    </Menu.Item>
-                    <Menu.Item
-                      component={Link}
-                      to="/owner/restaurant"
-                      leftSection={
-                        <IconMapPin
-                          style={{ width: rem(16), height: rem(16) }}
-                          color={theme.colors.blue[6]}
-                          stroke={1.5}
-                        />
-                      }
-                    >
-                      Your Restaurant
-                    </Menu.Item>
-                  </>
-                )}
-                <Menu.Item
-                  component={Link}
-                  to="/account"
-                  leftSection={
-                    <IconSettings
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
-                  }
-                >
-                  Account settings
-                </Menu.Item>
-
-                <Menu.Item
-                  leftSection={
-                    <IconLogout
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
-                  }
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+            <Group visibleFrom="sm">
+              <Button onClick={handleLogout}>Log Out</Button>
+            </Group>
           )}
         </Group>
-      </Container>
-    </div>
+      </header>
+    </Box>
   );
 };
