@@ -23,7 +23,7 @@ function SignInPage() {
   const [password, setPassword] = useState("");
   const { sendRequest, getLoginDetails } = useFetch();
   const { successToast, errorToast } = useToast();
-  // const { setUser } = useOutletContext();
+  const { setUser } = useOutletContext();
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
@@ -45,7 +45,7 @@ function SignInPage() {
         payload
       );
       storeToken(token);
-      //   setUser(getUser());
+        setUser(getUser());
       setSubmitting(false);
       navigate("/");
       successToast({
