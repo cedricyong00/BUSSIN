@@ -11,6 +11,7 @@ import SignUpPage from "./pages/User/Signup.jsx";
 import { Layout } from "./components/Layout/Layout";
 import Homepage from "./pages/User/Homepage.jsx";
 import { ProductPage } from "./pages/General/ProductPage.jsx";
+import { North } from "./pages/General/North.jsx";
 
 const theme = createTheme({
   fontFamily: "Montserrat, sans-serif",
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
           {/* Product Page */}
           <Route path="/taylor-swift" element={<ProductPage />} />
+          <Route path="/taylor-swift-north" element={<North />} />
           </Route>
         </Routes>
       </MantineProvider>
