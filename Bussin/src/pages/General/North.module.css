@@ -59,3 +59,7 @@
     background-color: pink; /* Change to your desired selected color */
     color: black;
   }
+
+  .booked {
+    background-color: gray; /* Example styling for booked seats */
+  }

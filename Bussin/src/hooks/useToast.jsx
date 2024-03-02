@@ -20,8 +20,8 @@ function useToast() {
       return;
     }
     notifications.show({
-      title: "Something went wrong!",
-      message: "Please try again later",
+      title: "Sorry this seat has been booked by others!",
+      message: "Please try other seats!",
       autoClose: 5000,
       color: "red",
     });

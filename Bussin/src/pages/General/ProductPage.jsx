@@ -4,7 +4,6 @@ import north from "../../assets/Product Images/North.gif";
 import northeast from "../../assets/Product Images/Northeast.gif";
 import west from "../../assets/Product Images/West.gif";
 import east from "../../assets/Product Images/East.gif";
-import central from "../../assets/Product Images/Central.gif";
 import classes from "./ProductPage.module.css";
 import { Link } from "react-router-dom";
 
@@ -13,7 +12,6 @@ const products = [
   { title: "N-EAST", locations: ["Serangoon", "Punggol", "Hougang", "Sengkang"], image: northeast, link: "/taylor-swift-northeast" },
   { title: "WEST", locations: ["Choa Chu Kang", "Jurong East", "Boon Lay", "Joo Koon", "Pioneer", "NTU"], image: west, link: "/taylor-swift-west" },
   { title: "EAST", locations: ["Bedok", "Tampines", "Pasir Ris", "Simei"], image: east, link: "/taylor-swift-east" },
-  { title: "CENTRAL", locations: ["Tanjong Pagar", "Chinatown", "Clarke Quay", "Esplanade", "Dhoby Ghaut", "Somerset", "Orchard"], image: central, link: "/taylor-swift-central" }
 ];
 
 export function ProductPage() {
