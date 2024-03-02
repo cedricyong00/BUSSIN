@@ -39,6 +39,7 @@ function SignInPage() {
         email: email,
         password: hashedPassword,
       };
+
       const token = await sendRequest(
         `${import.meta.env.VITE_API_URL}/user/login`,
         "POST",

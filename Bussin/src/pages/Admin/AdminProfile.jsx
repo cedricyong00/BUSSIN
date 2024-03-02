@@ -20,6 +20,7 @@ function AdminProfileCard() {
           "GET"
         );
         const bookingCounts = {};
+        console.log(userData)
         userData.bookings.forEach((booking) => {
           // Count number of bookings
           const userId = booking.user.id;
@@ -30,7 +31,6 @@ function AdminProfileCard() {
         const totalBookings = Object.values(bookingCounts).reduce(
           (acc, count) => acc + count,0
         );
-
         setBookingNumber(totalBookings)
         setLoading(false);
       } catch (err) {
