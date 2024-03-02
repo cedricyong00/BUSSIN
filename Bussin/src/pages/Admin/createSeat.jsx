@@ -5,7 +5,7 @@ import {
     TextInput,
     Title,
   } from "@mantine/core";
-  import classes from "./Signin.module.css";
+  import classes from "../User/Signin.module.css";
   import { useState } from "react";
   import { useNavigate } from "react-router-dom";
   import useFetch from "../../hooks/useFetch";
@@ -19,11 +19,14 @@ import {
     const [submitting, setSubmitting] = useState(false);
     const [number, setNumber] = useState();
     const booked = false;
+    const user = null;
 
     //user input
     const seatState = {
       SeatsNumber: number,
       booked: booked,
+      user: user
+
     };
   
     async function create(evt) {

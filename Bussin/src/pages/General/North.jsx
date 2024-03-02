@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Badge,
   Group,
@@ -7,10 +8,14 @@ import {
   SimpleGrid,
   Container,
   Image,
+  Button,
 } from "@mantine/core";
 import classes from "./North.module.css";
 import north from "../../assets/Product Images/North.gif";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useFetch from "../../hooks/useFetch";
+import useToast from "../../hooks/useToast";
+import { useOutletContext, useNavigate } from "react-router-dom";
 
 const mockdata = [
   {
@@ -31,16 +36,131 @@ const mockdata = [
 
 export function North() {
   // bus layout
+  const [data, setData] = useState([]);
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const { sendRequest } = useFetch();
+  const { user } = useOutletContext();
+  const { successToast, errorToast } = useToast();
+  const navigate = useNavigate();
 
-  const handleSeatClick = (seatNumber) => {
-    setSelectedSeats((prevSelectedSeats) => {
-      if (prevSelectedSeats.includes(seatNumber)) {
-        return prevSelectedSeats.filter((seat) => seat !== seatNumber);
-      } else {
-        return [...prevSelectedSeats, seatNumber];
+  useEffect(() => {
+    getSeats();
+  }, []);
+
+  // GET list of seats
+  const getSeats = async (seatId) => {
+    try {
+      const busData = await sendRequest(
+        `${import.meta.env.VITE_API_URL}/bus`,
+        "GET"
+      );
+      const formattedData = busData.buses.map((seat) => {
+        return { ...seat };
+      });
+      setData(formattedData);
+      const seat = formattedData.find((seat) => seat._id === seatId);
+      if (seat.booked) {
+        if (seat.user === user.id) {
+          removeSeatBooking(seatId);
+          setSelectedSeats((prevSelectedSeats) => {
+            if (prevSelectedSeats.includes(seatId)) {
+              return prevSelectedSeats.filter((seat) => seat !== seatId);
+            } else {
+              return [...prevSelectedSeats, seatId];
+            }
+          });
+          return;
+        }
+        // if seat's user id is not tied to the user
+        else if (seat.user !== null && seat.user !== user.id && seat.booked) {
+          errorToast();
+          return;
+        }
       }
-    });
+      setSelectedSeats((prevSelectedSeats) => {
+        if (prevSelectedSeats.includes(seatId)) {
+          return prevSelectedSeats.filter((seat) => seat !== seatId);
+        } else {
+          return [...prevSelectedSeats, seatId];
+        }
+      });
+      // update seat booked status to "BOOKED"
+      handleSeatUpdate(seatId);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Seat Selection
+  const handleSeatClick = async (seatId) => {
+    await getSeats(seatId);
+  };
+
+  const handleSubmit = async () => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
+    try {
+      await sendRequest(
+        `${import.meta.env.VITE_API_URL}/booking/create`,
+        "POST",
+        {
+          SeatsNumber: selectedSeats,
+          user: user.id,
+          date: date,
+          location: location
+        }
+      );
+      successToast({
+        title: "Seat(s) Booked!",
+        message: "You may check your bookings under your account",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSeatUpdate = async (seatId) => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
+    try {
+      await sendRequest(
+        `${import.meta.env.VITE_API_URL}/bus/${seatId}`,
+        "POST",
+        {
+          booked: true,
+          user: user.id,
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    getSeats();
+  };
+
+  const removeSeatBooking = async (seatId) => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
+    try {
+      await sendRequest(
+        `${import.meta.env.VITE_API_URL}/bus/${seatId}`,
+        "POST",
+        {
+          booked: false,
+          user: null,
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    getSeats();
   };
 
   const features = mockdata.map((feature, index) => (
@@ -129,17 +249,27 @@ export function North() {
         </ol>
         <h2>DATE</h2>
         <br />
-        <select name="date">
-          <option value="1">02 March 2024</option>
-          <option value="2">03 March 2024</option>
-          <option value="3">04 March 2024</option>
-          <option value="4">07 March 2024</option>
-          <option value="5">08 March 2024</option>
-          <option value="6">09 March 2024</option>
+        <select name="date" onChange={(e) => setDate(e.target.value)} value={date}>
+          <option disabled defaultValue>
+            Select Date
+          </option>
+          <option value="02 March 2024">02 March 2024</option>
+          <option value="03 March 2024">03 March 2024</option>
+          <option value="04 March 2024">04 March 2024</option>
+          <option value="07 March 2024">07 March 2024</option>
+          <option value="08 March 2024">08 March 2024</option>
+          <option value="09 March 2024">09 March 2024</option>
         </select>
         <br />
         <h2>DROP-OFF</h2>
-        <select name="location">
+        <select
+          name="location"
+          onChange={(e) => setLocation(e.target.value)}
+          value={location}
+        >
+          <option disabled defaultValue>
+            Select Location
+          </option>
           <option value="sembawang">Sembawang</option>
           <option value="canberra">Canberra</option>
           <option value="yishun">Yishun</option>
@@ -148,58 +278,34 @@ export function North() {
           <option value="woodlandsc">Woodlands CIQ</option>
         </select>
         <br />
-        <h2>QUANTITY</h2>
-        <select name="quantity">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </select>
-        </Group>
-        <br />
-        <Group justify="center">
+      </Group>
+      <br />
+      <Group justify="center">
         <h2>Seat Selection</h2>
-        </Group>
-        <Group justify="center">
+      </Group>
+      <Group justify="center">
         <div className={classes.seats}>
-          {[...Array(11)].map((_, rowIndex) => (
-            <div key={rowIndex} className={classes.row}>
-              {[...Array(4)].map((_, seatIndex) => {
-                const seatNumber = rowIndex * 4 + seatIndex + 1;
-                return (
-                  <div
-                    key={seatIndex}
-                    className={`${classes.seat} ${
-                      selectedSeats.includes(seatNumber) ? classes.selected : ""
-                    }`}
-                    onClick={() => handleSeatClick(seatNumber)}
-                  >
-                    {seatNumber}
-                  </div>
-                );
-              })}
+          {/* 12 rows */}
+          {[...Array(12)].map((_, rowIndex) => (
+            <div key={`row-${rowIndex}`} className={classes.row}>
+              {data.slice(rowIndex * 4, (rowIndex + 1) * 4).map((seat) => (
+                <div
+                  key={seat._id}
+                  className={`${classes.seat} ${
+                    selectedSeats.includes(seat._id) ? classes.selected : ""
+                  } ${seat.booked ? classes.booked : ""}`}
+                  onClick={() => handleSeatClick(seat._id)}
+                >
+                  {seat.SeatsNumber}
+                </div>
+              ))}
             </div>
           ))}
-          {/* Last row with 5 seats */}
-          <div className={classes.row}>
-            {[...Array(4)].map((_, seatIndex) => {
-              const seatNumber = 11 * 4 + seatIndex + 1;
-              return (
-                <div
-                  key={seatIndex}
-                  className={`${classes.seat} ${
-                    selectedSeats.includes(seatNumber) ? classes.selected : ""
-                  }`}
-                  onClick={() => handleSeatClick(seatNumber)}
-                >
-                  {seatNumber}
-                </div>
-              );
-            })}
-          </div>
         </div>
+      </Group>
+      <br />
+      <Group justify="center">
+        <Button onClick={handleSubmit}>BOOK</Button>
       </Group>
     </>
   );

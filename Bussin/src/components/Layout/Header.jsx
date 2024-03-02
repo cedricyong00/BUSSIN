@@ -59,20 +59,12 @@ export const Header = ({ user, setUser }) => {
             <a href="/taylor-swift" className={classes.link}>
               Taylor Swift
             </a>
-            <a href="/reviews" className={classes.link}>
-              Reviews
-            </a>
-            <a href="/faq" className={classes.link}>
-              FAQ
-            </a>
-            <a href="/terms-and-condition" className={classes.link}>
-              Terms & Condition
-            </a>
           </Group>
           )}
           {!user &&
             location.pathname !== "/signin" &&
-            location.pathname !== "/signup" && (
+            location.pathname !== "/signup" &&
+            location.pathname !== "/boss" && (
               <>
                 <Group visibleFrom="sm">
                   <Button variant="default" component={Link} to="/signin">
@@ -87,6 +79,7 @@ export const Header = ({ user, setUser }) => {
           {user && (
             
             <Group visibleFrom="sm">
+              <Button component={Link} to="/booking">My Bookings</Button>
               <Button onClick={handleLogout}>Log Out</Button>
             </Group>
           )}
