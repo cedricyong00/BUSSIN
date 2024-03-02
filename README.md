@@ -4,7 +4,7 @@ Project for General Assembly - Capstone
 My Bussin Buses App, developed with MERN stack offers a streamlined booking experience for users. It features two main models: User and Booking, supporting two user roles - Admin and Customers. The app simplifies the process of managing and making seat reservations for our bus, leveraging the latest web technologies for efficiency and user engagement.
 
 ## Live URL
-https://bussin-22dx.onrender.com/
+https://bussin-e4dw.onrender.com
 
 ## Source Repositories
 * Backend API https://github.com/cedricyong00/BUSSIN
