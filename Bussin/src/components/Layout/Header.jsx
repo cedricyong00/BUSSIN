@@ -53,12 +53,12 @@ export const Header = ({ user, setUser }) => {
           {location.pathname !== "/signin" && 
           location.pathname !== "/signup" && (
             <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="/" className={classes.link}>
+           <Anchor component={Link} to="/" className={classes.link}>
               Home
-            </a>
-            <a href="/taylor-swift" className={classes.link}>
+            </Anchor>
+            <Anchor component={Link} to="/taylor-swift" className={classes.link}>
               Taylor Swift
-            </a>
+            </Anchor>
           </Group>
           )}
           {!user &&
